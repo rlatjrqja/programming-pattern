@@ -36,8 +36,9 @@ namespace MuSoeun
 		MGameLoop() {}
 		~MGameLoop(){}
 
-		bool isGameRunnning = true;
-		bool isGamePause = false;
+		bool isGameRunnning = true;//프로그램 실행시 계속 실행 됨
+		bool isGamePause = false;//ESC 눌렀을 때 게임이 정지된 상태
+		char BeforeKey;//Pause용 이전키 기억 변수
 
 		void Initialize()
 		{
@@ -64,6 +65,13 @@ namespace MuSoeun
 				KeyEvent(_getch());
 			}
 		}
+		void Pause()
+		{
+			gotoxy(10, 10);
+			std::cout << "게임을 종료합니까?" << std::endl;
+			gotoxy(10, 11);
+			std::cout << "YES / NO" << std::endl;
+		}
 		void Render()
 		{
 			gotoxy(5, 5);
@@ -79,8 +87,6 @@ namespace MuSoeun
 				{
 					Update();
 				}
-				gotoxy(10, 10);
-				std::cout << "게임을 종료합니까? Enter" << std::endl;
 				KeyEvent(_getch());
 			}
 			Release();
@@ -88,33 +94,58 @@ namespace MuSoeun
 
 		void KeyEvent(char KeyInput)
 		{
-			// 한번 ESC 누르면 일시정지
-			// 나기기 선택하면 나가기
-			switch (KeyInput)
+			if (!isGamePause)//게임이 정지 상태가 아닐 때
 			{
-			case Key_ESC:
-				isGamePause = true;// esc 누르면 게임 정지
-				//isGameRunnning = false;
-				break;
-			case Key_LEFT:
-				Render();
-				std::cout << ANSI_COLOR_RED"왼쪽 눌림  " << std::endl;
-				break;
-			case Key_RIGHT:
-				Render();
-				std::cout << ANSI_COLOR_BLUE"오른쪽 눌림" << std::endl;
-				break;	
-			case Key_ENTER:
-				if (isGamePause)// 게임 정지 상태라면
+				switch (KeyInput)
 				{
-
-					isGameRunnning = false;
+				case Key_ESC:
+					isGamePause = true;// esc 누르면 게임 정지
+					system("cls");
+					Pause();
+					break;
+				case Key_LEFT:
+					Render();
+					std::cout << ANSI_COLOR_RED"왼쪽 눌림  " << std::endl;
+					break;
+				case Key_RIGHT:
+					Render();
+					std::cout << ANSI_COLOR_BLUE"오른쪽 눌림" << std::endl;
+					break;
+				default:
+					isGameRunnning = true;
+					break;
 				}
-				break;
-			default:
-				isGameRunnning = true;
-				break;
 			}
+			else//게임이 정지 상태일 때
+			{
+				switch (KeyInput)
+				{
+				case Key_LEFT:
+					gotoxy(10, 11);
+					std::cout << ANSI_COLOR_YELLOW"YES ";
+					std::cout << ANSI_COLOR_RESET"/ NO" << std::endl;
+					break;
+				case Key_RIGHT:
+					gotoxy(10, 11);
+					std::cout << ANSI_COLOR_RESET"YES /";
+					std::cout << ANSI_COLOR_YELLOW" NO";
+					std::cout << ANSI_COLOR_RESET << std::endl;
+					break;
+				case Key_ENTER:
+					if (BeforeKey == Key_LEFT)//YES 선택
+					{
+						isGamePause = false;
+						isGameRunnning = false;
+					}
+					else if (BeforeKey == Key_RIGHT)//NO 선택
+					{
+						isGamePause = false;
+					}
+					system("cls");
+					break;
+				}
+			}
+			BeforeKey = KeyInput;
 		}
 	};
 }

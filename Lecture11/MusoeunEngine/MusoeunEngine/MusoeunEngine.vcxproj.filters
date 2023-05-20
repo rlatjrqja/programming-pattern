@@ -23,5 +23,8 @@
     <ClInclude Include="MSEgameLoop.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="cursorCon.hpp">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,13 +2,17 @@
 #include <conio.h>
 #include "MSEgameLoop.hpp"
 
+using namespace Musoeun;
+
 int main()
 {
-    Musoeun::Scene scene;
-    Musoeun::Object obj;
+    /*
+    Scene scene;
+    Object obj(1,1);
     scene.Hierarchy.push_back(obj);
 
+    scene.Draw();
+    */
 
-    Musoeun::GameLoop gameLoop;
-    gameLoop.Run();
+    MGameLoop();
 }

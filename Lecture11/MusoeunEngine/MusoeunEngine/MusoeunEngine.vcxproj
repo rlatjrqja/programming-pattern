@@ -130,6 +130,7 @@
     <ClCompile Include="musoeun.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset.hpp" />
     <ClInclude Include="cursorCon.hpp" />
     <ClInclude Include="MSEgameLoop.hpp" />
   </ItemGroup>

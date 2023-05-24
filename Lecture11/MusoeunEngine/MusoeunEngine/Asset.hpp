@@ -32,6 +32,7 @@ namespace asset
 
 		bool SetActive = true;
 
+		Object() {}
 		Object(int x, int y)
 		{
 			SetPosition(x, y);
@@ -147,9 +148,11 @@ namespace asset
 		*/
 		void Draw()
 		{
-			for (int i = 0; i < Hierarchy.size(); i++) //하이어라키의 오브젝트가 가지고 있는 렌더 함수 실행
+			for (int i = 0; i < Hierarchy.size(); i++) 
+			//하이어라키의 오브젝트가 가지고 있는 렌더 함수 실행
 			{
-				Hierarchy[i].Render(&ScreenBuffer[((Hierarchy[i].Object_position_y) + 1) * (Viewport_width + 1) + (Hierarchy[i].Object_position_x + 1)], Viewport_width);
+				Hierarchy[i].Render(&ScreenBuffer[((Hierarchy[i].Object_position_y) + 1) 
+					*(Viewport_width + 1) + (Hierarchy[i].Object_position_x + 1)], Viewport_width);
 				//각 포지션에 1은 테두리 때문에, 맨뒤 1은 개행 때문에
 			}
 

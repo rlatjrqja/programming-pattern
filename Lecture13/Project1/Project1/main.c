@@ -1,61 +1,70 @@
 #include <stdio.h>
+#include <time.h>
 #include <Windows.h>
 #include "screen.h"
+#include "Util.h"
 
 int Initialize();
 int Release();
 void CheckError(int e);
+int drawBuffer();
 
 int GameState=0;
 
 int main()
 {
-	//SetTextBGColor(0b1001, 0b1000);
-
-	//setCursorPos(0, 0);
-	//CheckError
-
-
 	int isGameRunning = 1;
 
-	Initialize();
+	CheckError(Initialize());
+
+	unsigned long time_end = GetTickCount();
+	unsigned long time = GetTickCount();
 
 	while (isGameRunning)
 	{
+		drawBuffer();
 
-		isGameRunning = 0;
+		time = GetTickCount() - time_end;
+		time_end = GetTickCount();
+
+		if (time < 30)
+		{
+
+			Sleep(30-time);
+		}
+		if (time != 0)
+		{
+
+			printf("time : %d \nfps : %d", time, 1000 / time);
+		}
+
 	}
 
-	//Release();
+	Release();
 
 	return 0;
-}
-
-
-
-
-
-
-void CheckError(int e)
-{
-	if (e == 1)
-	{
-		printf("[line:%d, %s]에러가 발생했습니다.\n", __LINE__, __func__);
-		exit(1);
-	}
 }
 
 int Initialize()
 {
 	GameState = 0;
 
+	setScreenSize(70, 20);
 	SetColor(0b1000, 0b1111);
-	setCursorPos(0, 0);
 	
 	ClearBuffer();
-	WriteBuffer(30,4,"test");
-	printf("%s", ScreenBuffer);
+	WriteBuffer(30,4,"게임 제목");
+	WriteBuffer(30, 6, "1. 게임시작");
+	WriteBuffer(30, 7, "2. 게임종료");
 	
+
+	return 0;
+}
+
+int drawBuffer()
+{
+	setCursorPos(0, 0);
+	printf("%s", ScreenBuffer);
 
 	return 0;
 }

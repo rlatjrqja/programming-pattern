@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b8e3fdbe-ab16-4975-833a-d8cc65244c13}</ProjectGuid>
-    <RootNamespace>MusoeunEngine</RootNamespace>
+    <ProjectGuid>{7c88f2d7-0ba7-4853-a6a8-ae0b033102db}</ProjectGuid>
+    <RootNamespace>wormGameGPT</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,16 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="musoeun.cpp" />
-    <ClCompile Include="Play_GameOver.cpp" />
-    <ClCompile Include="Play_Title.cpp" />
-    <ClCompile Include="Play_WormGame.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Asset.hpp" />
-    <ClInclude Include="cursorCon.hpp" />
-    <ClInclude Include="MSEgameLoop.hpp" />
-    <ClInclude Include="Play_Viewports.hpp" />
+    <ClCompile Include="main.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

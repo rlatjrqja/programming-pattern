@@ -1,6 +1,6 @@
-#pragma once
 #include <vector>
-#include "cursorCon.hpp"
+#include <iostream>
+#include <Windows.h>
 
 using namespace std;
 
@@ -23,12 +23,11 @@ namespace asset
 	class Object
 	{
 	public:
-
 		int Object_position_x = 0;
 		int Object_position_y = 0;
 
-		int Object_scale_x = 3;
-		int Object_scale_y = 3;
+		int Object_scale_x = 1;
+		int Object_scale_y = 1;
 
 		bool SetActive = true;
 
@@ -44,9 +43,13 @@ namespace asset
 			Object_position_x = x;
 			Object_position_y = y;
 		}
+		void SetScale(int x, int y)
+		{
+			Object_scale_x = x;
+			Object_scale_y = y;
+		}
 
-
-		void Render(char* ScreenBuffer, int Viewport_width) //스크린 버퍼 배열을 인자값으로 받음
+		virtual void Render(char* ScreenBuffer, int Viewport_width) //스크린 버퍼 배열을 인자값으로 받음
 		{
 			if (SetActive) //활성 상태라면
 			{
@@ -59,20 +62,11 @@ namespace asset
 				}
 			}
 		}
-		/*
-		virtual void Render(char* ScreenBuffer, int Viewport_width) //스크린 버퍼 배열을 인자값으로 받음
-		{
-			if (SetActive) //활성 상태라면
-			{
-				ScreenBuffer[0] = '*';
-			}
-		}
-		*/
 
 		vector<class Component> components; //이 오브젝트가 가지고 있는 컴포넌트 리스트
 	};
 
-	class Cube :Object
+	class Cube :public Object
 	{
 	public:
 		Cube(int x, int y) :Object(x, y)
@@ -93,6 +87,46 @@ namespace asset
 					}
 				}
 			}
+		}
+	};
+	class UI:public Object
+	{
+	public :
+		char text[20];
+		UI(int x, int y,const char* str) :Object(x, y)
+		{
+			strcpy_s(text, str);
+		}
+		~UI() {}
+		void SetText(const char* str)
+		{
+			strcpy_s(text, str);
+		}
+		void SetText(const char* str,int)
+		{
+			strcpy_s(text, str);
+		}
+
+		void Render(char* ScreenBuffer, int Viewport_width)
+		{
+			//파
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (8 << 4) + 0b0001);//b:2진수 e:유리수 x:16진수 l:8bit*00000000
+			for (int i = 0; i < strlen(text); i++)
+			{
+				ScreenBuffer[i] = text[i];
+			}
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (8 << 4) + 0b1111);
+		}
+		int Selected()
+		{
+			COORD pos = { Object_position_x,Object_position_y+10 };
+			COORD pos2 = { 0,0 };
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),pos);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (8 << 4) + 0b0001);
+			cout << text;
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos2);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (8 << 4) + 0b1111);
+			return 1;
 		}
 	};
 
@@ -131,34 +165,26 @@ namespace asset
 		}
 		~Scene() {}
 
-		vector<Object> Hierarchy; //이 게임의 오브젝트들을 가지고 있는 리스트 이름 Hierarchy
 
-		/*
-		void Draw()
+		vector<Object*> Hierarchy; //이 게임의 오브젝트들을 가지고 있는 리스트 이름 Hierarchy
+
+		void ClearBuffer()
 		{
-			for (int i = 0; i < Hierarchy.size(); i++)
-			{
-				Object* object = Hierarchy[i];
-				object->Render(&ScreenBuffer[((object->Object_position_y) + 1) * (Viewport_width + 1) + (object->Object_position_x + 1)], Viewport_width);
-			}
-
-			cursor::gotoxy(0, 0);
-			cout.write(ScreenBuffer.data(), ScreenBuffer.size());
+			ScreenBuffer.clear();
 		}
-		*/
+
 		void Draw()
 		{
+
 			for (int i = 0; i < Hierarchy.size(); i++) 
 			//하이어라키의 오브젝트가 가지고 있는 렌더 함수 실행
 			{
-				Hierarchy[i].Render(&ScreenBuffer[((Hierarchy[i].Object_position_y) + 1) 
-					*(Viewport_width + 1) + (Hierarchy[i].Object_position_x + 1)], Viewport_width);
+				int position = ((Hierarchy[i]->Object_position_y) + 1) * (Viewport_width + 1) + (Hierarchy[i]->Object_position_x + 1);
+				Hierarchy[i]->Render(&ScreenBuffer[position], Viewport_width);
 				//각 포지션에 1은 테두리 때문에, 맨뒤 1은 개행 때문에
 			}
 
-			cursor::gotoxy(0, 0);
 			cout.write(ScreenBuffer.data(), ScreenBuffer.size());
 		}
-		
 	};
 }

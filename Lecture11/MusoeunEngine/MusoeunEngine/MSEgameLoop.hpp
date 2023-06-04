@@ -1,32 +1,56 @@
-#pragma once
-#include "Asset.hpp";
+#include "Play_Viewports.hpp"
+#include "cursorCon.hpp"
 
 using namespace std;
-using namespace asset;
+using namespace cursor;
 
 namespace Musoeun
 {
+	enum GameState
+	{
+		title = 1, isGameing, gameOver, pause
+	};
+	GameState gamestate;
+
+	void Master_Initialize();
+
 	void MGameLoop()
 	{
-		bool isGameing = true;
+		Master_Initialize();
 
-		Scene scene1(20,20); //20x20 크기 씬 생성
-
-		Object cube1(3, 3);
-		cube1.Object_scale_x = 5;
-		cube1.Object_scale_y = 2;
-
-		Object cube2(10, 10); //x = 2, y = -2 위치에 큐브 생성
-
-		Object cube3(3, 7);
-		cube3.Object_scale_x = 4;
-		scene1.Hierarchy.push_back(cube1);
-		scene1.Hierarchy.push_back(cube2);
-		scene1.Hierarchy.push_back(cube3);
-
-		while (isGameing)
+		while (1)
 		{
-			scene1.Draw();
+			gotoxy(0, 0);
+			switch (gamestate)
+			{
+			case title:
+				if (PlayTitle() == 2) gamestate = isGameing;
+				break;
+			case isGameing:
+				if (PlayGame() == 1) gamestate = title;
+				//if (PlayGame() == 3) gamestate = gameOver;
+				//if (PlayGame() == 4) gamestate = pause;
+				break;
+			case gameOver:
+				exit;
+				//if (PlayGameOver() == 1) gamestate = title;
+				//if (PlayGameOver() == 2) gamestate = isGameing;
+				break;
+			case pause:
+				break;
+			}
+			Sleep(100);
 		}
 	};
+
+
+	void Master_Initialize()
+	{
+		gamestate = title;
+		SetColor(0b1000, 0b1111);
+
+		Title_Initialize();
+		WormGame_Initialize();
+		gameOver_Initialize();
+	}
 }

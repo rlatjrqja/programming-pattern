@@ -1,8 +1,10 @@
 #include "screen.h"
 #include <Windows.h>
 
+#define MAX_SNAKE_LENGTH 1400
 int screenWidth = 70;
 int screenHeight = 20;
+
 
 void setScreenSize(int width, int height)
 {
@@ -21,6 +23,14 @@ void SetColor(unsigned short backgroundColor, unsigned short TextColor)
 	unsigned short color = TextColor;
 	color = color + (backgroundColor << 4);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+void SetCursorVisibleisty(int isVisible)
+{
+	CONSOLE_CURSOR_INFO cursorInfo;
+	cursorInfo.bVisible = isVisible;
+	cursorInfo.dwSize = 1;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 }
 
 void ClearBuffer()

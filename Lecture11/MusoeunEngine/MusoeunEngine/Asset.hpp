@@ -168,10 +168,6 @@ namespace asset
 
 		vector<Object*> Hierarchy; //이 게임의 오브젝트들을 가지고 있는 리스트 이름 Hierarchy
 
-		void ClearBuffer()
-		{
-			ScreenBuffer.clear();
-		}
 
 		void Draw()
 		{

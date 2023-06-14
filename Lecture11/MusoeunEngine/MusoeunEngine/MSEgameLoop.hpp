@@ -6,11 +6,7 @@ using namespace cursor;
 
 namespace Musoeun
 {
-	enum GameState
-	{
-		title = 1, isGameing, gameOver, pause
-	};
-	GameState gamestate;
+	int gameState;
 
 	void Master_Initialize();
 
@@ -21,22 +17,19 @@ namespace Musoeun
 		while (1)
 		{
 			gotoxy(0, 0);
-			switch (gamestate)
+
+			switch (gameState)
 			{
-			case title:
-				if (PlayTitle() == 2) gamestate = isGameing;
+			case State_GameTitle:
+				gameState = PlayTitle();
 				break;
-			case isGameing:
-				if (PlayGame() == 1) gamestate = title;
-				//if (PlayGame() == 3) gamestate = gameOver;
-				//if (PlayGame() == 4) gamestate = pause;
+			case State_WormGame:
+				gameState = PlayGame();
 				break;
-			case gameOver:
-				exit;
-				//if (PlayGameOver() == 1) gamestate = title;
-				//if (PlayGameOver() == 2) gamestate = isGameing;
+			case State_GameOver:
+				gameState = PlayGameOver();
 				break;
-			case pause:
+			case State_Pause:
 				break;
 			}
 			Sleep(100);
@@ -46,7 +39,7 @@ namespace Musoeun
 
 	void Master_Initialize()
 	{
-		gamestate = title;
+		gameState = State_GameTitle;
 		SetColor(0b1000, 0b1111);
 
 		Title_Initialize();

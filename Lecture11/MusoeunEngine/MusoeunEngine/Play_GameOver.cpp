@@ -31,15 +31,15 @@ int PlayGameOver()
 		switch (key_input2)
 		{
 		case Key_UP://계속하기
-			return 2;
+			return State_WormGame;
 
 		case Key_DOWN://그만하기
-			return 1;
+			return State_GameTitle;
 
 		default:
-			return 0;
+			return State_GameOver;
 		}
 	}
 
-	return 0;
+	return State_GameOver;
 }

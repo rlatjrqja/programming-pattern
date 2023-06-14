@@ -59,7 +59,7 @@ SnakeHead snakeHead;
 Food food;
 //UI Score(1, 28,"Score : 0");
 
-int RN = 2;
+int RN = State_WormGame;
 
 void WormGame_Initialize()
 {
@@ -92,7 +92,9 @@ void WormGame_Initialize()
 
 int PlayGame()
 {
-	gameScene.Draw();
+    RN = State_WormGame;
+
+    gameScene.Draw();
     handleInput();
     update();
     printf("\n\nScore : %d", snakeHead.score);
@@ -133,9 +135,45 @@ void handleInput() {
     }
 }
 
-void start()
+void Dead()
 {
+    snakeHead.direction = RIGHT;
+    snakeHead.SetPosition(ViewPortWwidth / 2, ViewPortHeight / 2);
+    snakeHead.score = 0;
 
+    for (int i = InitLen; i < snakeHead.snakeTails.size(); i++)
+    {
+        gameScene.Hierarchy.erase(std::find(gameScene.Hierarchy.begin(), gameScene.Hierarchy.end(), snakeHead.snakeTails[i]));
+        snakeHead.snakeTails.erase(std::find(snakeHead.snakeTails.begin(), snakeHead.snakeTails.end(), snakeHead.snakeTails[i]));
+    }
+
+    for (int i = 0; i < snakeHead.snakeTails.size(); i++)
+    {
+        snakeHead.snakeTails[i]->SetPosition(snakeHead.Object_position_x - i, snakeHead.Object_position_y);
+    }
+
+    food.SetPosition(rand() % ViewPortWwidth, rand() % ViewPortHeight);
+    food.eaten = 0;
+
+    for (int i = 0; i < (ViewPortWwidth+1) * ViewPortHeight; i++)
+    {
+        for (int j = 0; j < ViewPortHeight; j++)
+        {
+            for (int i = 0; i < ViewPortWwidth + 1; i++)
+            {
+                if (i == ViewPortWwidth)
+                    gameScene.ScreenBuffer[i + (j * (ViewPortWwidth + 1))] = '\n';
+                else
+                {
+                    if (i == 0 || i == (ViewPortWwidth - 1) || j == 0 || j == (ViewPortHeight - 1))
+                        gameScene.ScreenBuffer[i + (j * (ViewPortWwidth + 1))] = '#';
+                    else
+                        gameScene.ScreenBuffer[i + (j * (ViewPortWwidth + 1))] = ' ';
+                }
+            }
+        }
+        gameScene.ScreenBuffer[ViewPortHeight * (ViewPortWwidth + 1) - 1] = '\0';
+    }
 }
 
 void update()
@@ -143,7 +181,7 @@ void update()
     for (int i = snakeHead.snakeTails.size() - 1; i > 0; i--) 
     {
         snakeHead.snakeTails[i]->Erase();
-        *snakeHead.snakeTails[i] = *snakeHead.snakeTails[i - 1];
+        snakeHead.snakeTails[i]->SetPosition(snakeHead.snakeTails[i - 1]->Object_position_x, snakeHead.snakeTails[i - 1]->Object_position_y);
     }
     snakeHead.snakeTails[0]->SetPosition(snakeHead.Object_position_x, snakeHead.Object_position_y);
 
@@ -164,20 +202,20 @@ void update()
 
     
 
-    if (snakeHead.Object_position_x < 0 || snakeHead.Object_position_x >= ViewPortWwidth || snakeHead.Object_position_y < 0 || snakeHead.Object_position_y >= ViewPortHeight)
+    if (snakeHead.Object_position_x < 0 || snakeHead.Object_position_x >= ViewPortWwidth-1 || snakeHead.Object_position_y < 0 || snakeHead.Object_position_y >= ViewPortHeight-1)
     {
-        RN = 1;//gamestate = gameOver;  // Hit the wall
+        RN = State_GameOver; // Hit the wall
         system("cls");
-        WormGame_Initialize();
+        Dead();
     }
 
 
     for (int i = 0; i < snakeHead.snakeTails.size(); i++) {
         if (snakeHead.Object_position_x == snakeHead.snakeTails[i]->Object_position_x && snakeHead.Object_position_y == snakeHead.snakeTails[i]->Object_position_y)
         {
-            RN = 1;//gamestate = gameOver;  // Hit itself
+            RN = State_GameOver; // Hit itself
             system("cls");
-            WormGame_Initialize();
+            Dead();
             break;
         }
     }
@@ -194,7 +232,7 @@ void update()
 
     if (food.eaten)
     {
-        food.SetPosition(rand() % ViewPortWwidth, rand() % ViewPortHeight);
+        food.SetPosition(rand() % ViewPortWwidth-2, rand() % ViewPortHeight-2);
         food.eaten = 0;
     }
 }

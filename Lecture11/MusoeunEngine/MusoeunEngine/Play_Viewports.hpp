@@ -15,12 +15,16 @@
 #define ANSI_COLOR_CYAN     "\x1b[36m"
 #define ANSI_COLOR_RESET    "\x1b[0m"
 
+#define State_GameTitle 1
+#define State_WormGame 2
+#define State_GameOver 3
+#define State_Pause 4
+
 //선언영역
 int PlayTitle();
 int PlayGame();
 int PlayGameOver();
 int PlayPause();
-
 
 void Title_Initialize();
 void WormGame_Initialize();

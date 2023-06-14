@@ -29,13 +29,16 @@ int PlayTitle()
 		switch (key_input)
 		{
 		case Key_UP:
-			return 2;
+			return State_WormGame;
 		case Key_DOWN:
 			exit(1);
-			return 0;
+			return State_GameTitle;
 		default:
-			return 0;
+			return State_GameTitle;
 		}
+
 		key_input = NULL;
 	}
+
+	return State_GameTitle;
 }

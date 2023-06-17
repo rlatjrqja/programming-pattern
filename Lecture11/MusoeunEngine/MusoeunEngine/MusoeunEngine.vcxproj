@@ -127,8 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cursorCon.cpp" />
     <ClCompile Include="musoeun.cpp" />
+    <ClCompile Include="Play_GameInfo.cpp" />
     <ClCompile Include="Play_GameOver.cpp" />
+    <ClCompile Include="Play_Pause.cpp" />
     <ClCompile Include="Play_Title.cpp" />
     <ClCompile Include="Play_WormGame.cpp" />
   </ItemGroup>

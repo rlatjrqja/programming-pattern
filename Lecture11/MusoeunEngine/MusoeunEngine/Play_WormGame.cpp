@@ -24,7 +24,7 @@ public:
     char* Buffer;
     void Render(char* ScreenBuffer, int Viewport_width)
     {
-        *ScreenBuffer = 'o';
+        *ScreenBuffer = '*';
         Buffer = ScreenBuffer;
     }
 
@@ -43,7 +43,21 @@ public:
 
     void Render(char* ScreenBuffer, int Viewport_width)
     {
-        *ScreenBuffer = '@';
+        switch (direction)
+        {
+        case UP:
+            *ScreenBuffer = '^';
+            break;
+        case LEFT:
+            *ScreenBuffer = '<';
+            break;
+        case RIGHT:
+            *ScreenBuffer = '>';
+            break;
+        case DOWN:
+            *ScreenBuffer = 'v';
+            break;
+        }
     }
 };
 
@@ -87,7 +101,6 @@ void WormGame_Initialize()
     gameScene.Hierarchy.push_back(&snakeHead);
     gameScene.Hierarchy.push_back(&food);
 
-    //gameScene.ClearBuffer();
 }
 
 int PlayGame()
@@ -95,9 +108,10 @@ int PlayGame()
     RN = State_WormGame;
 
     gameScene.Draw();
+    printf("\n\nScore : %d", snakeHead.score);
+
     handleInput();
     update();
-    printf("\n\nScore : %d", snakeHead.score);
 
 	return RN;
 }
@@ -127,7 +141,7 @@ void handleInput() {
             }
             break;
         case Key_ESC:  // Esc key
-            
+            RN = State_Pause;
             break;
         case Key_ENTER:
             break;
@@ -141,10 +155,21 @@ void Dead()
     snakeHead.SetPosition(ViewPortWwidth / 2, ViewPortHeight / 2);
     snakeHead.score = 0;
 
-    for (int i = InitLen; i < snakeHead.snakeTails.size(); i++)
+    int lastLength = snakeHead.snakeTails.size();
+
+    for (int i = 0; i < lastLength; i++)
     {
         gameScene.Hierarchy.erase(std::find(gameScene.Hierarchy.begin(), gameScene.Hierarchy.end(), snakeHead.snakeTails[i]));
-        snakeHead.snakeTails.erase(std::find(snakeHead.snakeTails.begin(), snakeHead.snakeTails.end(), snakeHead.snakeTails[i]));
+        //snakeHead.snakeTails.erase(std::find(snakeHead.snakeTails.begin(), snakeHead.snakeTails.end(), snakeHead.snakeTails[i]));
+    }
+    snakeHead.snakeTails.clear();
+
+    for (int i = 0; i < InitLen; i++)
+    {
+        SnakeBody* snakebody = new SnakeBody();
+        snakeHead.snakeTails.push_back(snakebody);
+        gameScene.Hierarchy.push_back(snakebody);
+        snakeHead.snakeTails[i]->SetPosition(snakeHead.Object_position_x - i, snakeHead.Object_position_y);
     }
 
     for (int i = 0; i < snakeHead.snakeTails.size(); i++)
@@ -155,6 +180,8 @@ void Dead()
     food.SetPosition(rand() % ViewPortWwidth, rand() % ViewPortHeight);
     food.eaten = 0;
 
+
+    //화면 버퍼 클리어
     for (int i = 0; i < (ViewPortWwidth+1) * ViewPortHeight; i++)
     {
         for (int j = 0; j < ViewPortHeight; j++)
@@ -202,11 +229,11 @@ void update()
 
     
 
-    if (snakeHead.Object_position_x < 0 || snakeHead.Object_position_x >= ViewPortWwidth-1 || snakeHead.Object_position_y < 0 || snakeHead.Object_position_y >= ViewPortHeight-1)
+    if (snakeHead.Object_position_x < 0 || snakeHead.Object_position_x >= ViewPortWwidth-2 || snakeHead.Object_position_y < 0 || snakeHead.Object_position_y >= ViewPortHeight-2)
     {
         RN = State_GameOver; // Hit the wall
-        system("cls");
         Dead();
+        system("cls");
     }
 
 
@@ -214,8 +241,8 @@ void update()
         if (snakeHead.Object_position_x == snakeHead.snakeTails[i]->Object_position_x && snakeHead.Object_position_y == snakeHead.snakeTails[i]->Object_position_y)
         {
             RN = State_GameOver; // Hit itself
-            system("cls");
             Dead();
+            system("cls");
             break;
         }
     }
@@ -232,7 +259,7 @@ void update()
 
     if (food.eaten)
     {
-        food.SetPosition(rand() % ViewPortWwidth-2, rand() % ViewPortHeight-2);
+        food.SetPosition(rand() % (ViewPortWwidth-3), rand() % (ViewPortHeight-3));
         food.eaten = 0;
     }
 }

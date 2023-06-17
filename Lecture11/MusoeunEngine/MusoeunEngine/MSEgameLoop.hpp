@@ -1,12 +1,14 @@
+#pragma once
 #include "Play_Viewports.hpp"
 #include "cursorCon.hpp"
+#include <Windows.h>
 
 using namespace std;
 using namespace cursor;
 
 namespace Musoeun
 {
-	int gameState;
+	int gameState = State_GameTitle;
 
 	void Master_Initialize();
 
@@ -30,17 +32,19 @@ namespace Musoeun
 				gameState = PlayGameOver();
 				break;
 			case State_Pause:
+				gameState = PlayPause();
+				break;
+			case State_Info:
+				gameState = PlayInfo();
 				break;
 			}
 			Sleep(100);
 		}
 	};
 
-
 	void Master_Initialize()
 	{
-		gameState = State_GameTitle;
-		SetColor(0b1000, 0b1111);
+		SetCursorState(false);
 
 		Title_Initialize();
 		WormGame_Initialize();

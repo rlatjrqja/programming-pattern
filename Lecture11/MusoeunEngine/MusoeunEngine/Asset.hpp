@@ -2,6 +2,16 @@
 #include <iostream>
 #include <Windows.h>
 
+#define red 0b0100
+#define green 0b0010
+#define blue 0b0001
+#define yellow 0b0110
+#define bluegreen 0b0011
+#define purple 0b0101
+#define gray 0b0111
+#define black 0b0000
+#define white 0b1111
+
 using namespace std;
 
 namespace asset
@@ -57,7 +67,7 @@ namespace asset
 				{
 					for (int i = 0; i < Object_scale_x; i++)
 					{
-						ScreenBuffer[i + j * (Viewport_width + 1)] = '*';
+						ScreenBuffer[i + j * (Viewport_width + 1)] = '+';
 					}
 				}
 			}
@@ -83,7 +93,7 @@ namespace asset
 				{
 					for (int i = 0; i < Object_scale_x; i++)
 					{
-						ScreenBuffer[i + j * (Viewport_width + 1)] = '*';
+						ScreenBuffer[i + j * (Viewport_width + 1)] = '#';
 					}
 				}
 			}
@@ -109,23 +119,20 @@ namespace asset
 
 		void Render(char* ScreenBuffer, int Viewport_width)
 		{
-			//파
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (8 << 4) + 0b0001);//b:2진수 e:유리수 x:16진수 l:8bit*00000000
 			for (int i = 0; i < strlen(text); i++)
 			{
 				ScreenBuffer[i] = text[i];
 			}
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (8 << 4) + 0b1111);
 		}
-		int Selected()
+
+		int Selected(int color) //b:2진수 e:유리수 x:16진수 l:8bit*00000000
 		{
-			COORD pos = { Object_position_x,Object_position_y+10 };
-			COORD pos2 = { 0,0 };
-			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),pos);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (8 << 4) + 0b0001);
+			COORD pos = { Object_position_x + 1,Object_position_y + 1 };
+
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (0b0000 << 4) + color);
 			cout << text;
-			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos2);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (8 << 4) + 0b1111);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (0b0000 << 4) + 0b1111);
 			return 1;
 		}
 	};

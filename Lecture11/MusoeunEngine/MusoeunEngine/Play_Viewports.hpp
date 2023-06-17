@@ -1,4 +1,4 @@
-#include <Windows.h>
+#pragma once
 
 #define Key_ESC 27
 #define Key_UP 'w'
@@ -19,14 +19,17 @@
 #define State_WormGame 2
 #define State_GameOver 3
 #define State_Pause 4
+#define State_Info 5
 
 //선언영역
 int PlayTitle();
 int PlayGame();
 int PlayGameOver();
 int PlayPause();
+int PlayInfo();
 
 void Title_Initialize();
 void WormGame_Initialize();
 void gameOver_Initialize();
 
+void Dead();

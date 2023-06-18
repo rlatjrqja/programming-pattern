@@ -2,6 +2,10 @@
 #include "Asset.hpp"
 #include <vector>
 #include <conio.h>
+
+//#include <Windows.h>
+//#include <time.h>
+
 #define ViewPortWwidth 80
 #define ViewPortHeight 28
 #define InitLen 3
@@ -94,14 +98,22 @@ void WormGame_Initialize()
     }
 
     //음식 초기화
-    food.SetPosition(rand() % ViewPortWwidth, rand() % ViewPortHeight);
+    food.SetPosition(rand() % (ViewPortWwidth-3), rand() % (ViewPortHeight-3));
     food.eaten = 0;
 
     //게임의 하이어라키에 머리,음식 저장
     gameScene.Hierarchy.push_back(&snakeHead);
     gameScene.Hierarchy.push_back(&food);
 
+    /*Object* box = new Object;
+    box->SetPosition(77, 25);
+    gameScene.Hierarchy.push_back(box);*/
+
 }
+
+
+//unsigned long time_end = GetTickCount();
+//unsigned long time1 = GetTickCount();
 
 int PlayGame()
 {
@@ -109,6 +121,18 @@ int PlayGame()
 
     gameScene.Draw();
     printf("\n\nScore : %d", snakeHead.score);
+
+    /*time1 = GetTickCount() - time_end;
+    time_end = GetTickCount();
+    if (time1 < 33)
+    {
+        Sleep(33 - time1);
+    }
+    if (time1 != 0)
+    {
+        printf("\n\nScore : %d\ttime : %d \tfps : %d", snakeHead.score, time1, 1000 / time1);
+    }*/
+
 
     handleInput();
     update();
@@ -177,7 +201,7 @@ void Dead()
         snakeHead.snakeTails[i]->SetPosition(snakeHead.Object_position_x - i, snakeHead.Object_position_y);
     }
 
-    food.SetPosition(rand() % ViewPortWwidth, rand() % ViewPortHeight);
+    food.SetPosition(rand() % (ViewPortWwidth-3), rand() % (ViewPortHeight-3));
     food.eaten = 0;
 
 

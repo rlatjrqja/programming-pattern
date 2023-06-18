@@ -9,9 +9,9 @@ char LastKey = Key_LEFT;
 
 int PlayPause()
 {
-	gotoxy(10, 10);
+	gotoxy(30, 10);
 	std::cout << "게임을 종료합니까?" << std::endl;
-	gotoxy(10, 11);
+	gotoxy(35, 12);
 	std::cout << ANSI_COLOR_YELLOW"YES ";
 	std::cout << ANSI_COLOR_RESET"/ NO" << std::endl;
 
@@ -31,12 +31,12 @@ int PlayPause()
 			selLeft = false;
 			break;
 		case Key_ENTER:
-			if (LastKey == Key_LEFT)//YES 선택
+			if (LastKey == Key_LEFT || LastKey == Key_UP)//YES 선택
 			{
 				system("cls");
 				return State_GameTitle;
 			}
-			else if (LastKey == Key_RIGHT)//NO 선택
+			else if (LastKey == Key_RIGHT || LastKey == Key_DOWN)//NO 선택
 			{
 				system("cls");
 				return State_WormGame;
@@ -50,12 +50,12 @@ int PlayPause()
 	switch (LastKey)
 	{
 	case Key_LEFT:
-		gotoxy(10, 11);
+		gotoxy(35, 12);
 		std::cout << ANSI_COLOR_YELLOW"YES ";
 		std::cout << ANSI_COLOR_RESET"/ NO" << std::endl;
 		break;
 	case Key_RIGHT:
-		gotoxy(10, 11);
+		gotoxy(35, 12);
 		std::cout << ANSI_COLOR_RESET"YES /";
 		std::cout << ANSI_COLOR_YELLOW" NO";
 		std::cout << ANSI_COLOR_RESET << std::endl;

@@ -2,12 +2,11 @@
 #include "Play_Viewports.hpp"
 #include "Asset.hpp"
 #include <conio.h>
-#include <iostream>
 
 using namespace asset;
 
 Scene titleScene(40, 20);
-UI gameName(14, 5, "김석범 게임");
+UI gameName(13, 5, "화살 키우기");
 UI menu1(13, 7, "1. 이어하기");
 UI menu5(13, 9, "3. 게임설명");
 UI menu2(13, 10, "4. 게임종료");
